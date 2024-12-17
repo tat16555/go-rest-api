@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book API Testing</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Book API Testing</h1>
+
+    <!-- Table to display books -->
+    <h2>Books</h2>
+    <table id="books-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Author</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be inserted here dynamically -->
+        </tbody>
+    </table>
+
+    <!-- Form to create a new book -->
+    <h2>Create a New Book</h2>
+    <form id="create-book-form">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
+        <br>
+        <label for="author">Author:</label>
+        <input type="text" id="author" name="author" required>
+        <br>
+        <button type="submit">Create Book</button>
+    </form>
+
+    <script>
+        const apiUrl = 'http://localhost:3000/books';
+
+        // Function to fetch and display books in a table
+        async function fetchBooks() {
+            const response = await fetch(apiUrl);
+            const books = await response.json();
+            const booksTableBody = document.getElementById('books-table').getElementsByTagName('tbody')[0];
+            booksTableBody.innerHTML = ''; // Clear current table content
+            books.forEach(book => {
+                const row = booksTableBody.insertRow();
+                row.insertCell(0).textContent = book.id;
+                row.insertCell(1).textContent = book.title;
+                row.insertCell(2).textContent = book.author;
+            });
+        }
+
+        // Create a new book
+        document.getElementById('create-book-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const title = document.getElementById('title').value;
+            const author = document.getElementById('author').value;
+            const newBook = { title, author };
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newBook)
+            });
+            const createdBook = await response.json();
+            alert(`Created new book: ${createdBook.title}`);
+            fetchBooks(); // Refresh the books list
+        });
+
+        // Initial fetch of books
+        fetchBooks();
+    </script>
+</body>
+</html>

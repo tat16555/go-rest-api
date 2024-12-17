@@ -1,156 +1,118 @@
-# Go REST API - Book Management
+# คู่มือการใช้งาน API
 
-This is a simple REST API for managing books, built with Go, Gin, and GORM, and exposes endpoints for performing CRUD (Create, Read, Update, Delete) operations on books.
+เอกสารนี้อธิบายวิธีการใช้งาน API สำหรับการดึงข้อมูลจากระบบ
 
-## Requirements
+## Base URL
 
-- Go (version 1.18 or higher)
-- Docker (optional for running the database)
-- SQLite or MySQL database (configured in the code)
+การเรียกใช้ API ทั้งหมดจะถูกส่งไปที่ URL นี้:
+> ตัวอย่าง: `https://true-sadly-bass.ngrok-free.app`
 
-## Installation
+## การยืนยันตัวตน
 
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/your-username/go-rest-api.git
-    cd go-rest-api
-    ```
+API นี้ไม่ต้องการการยืนยันตัวตน คุณสามารถเข้าถึง endpoints ได้โดยตรงโดยไม่จำเป็นต้องใช้ API key
 
-2. Install dependencies:
-    ```bash
-    go mod tidy
-    ```
+## Endpoints ที่สามารถใช้งานได้
 
-3. Run the API:
-    ```bash
-    go run main.go
-    ```
+### 1. **ดึงข้อมูลหนังสือทั้งหมด**
 
-4. The server will start on `http://localhost:3000`.
+Endpoint นี้ใช้สำหรับดึงข้อมูลหนังสือทั้งหมดจากระบบ
 
-## API Endpoints
+- **HTTP Method**: `GET`
+- **Endpoint**: `/books`
+- **ตัวอย่างการส่งคำขอ**:
 
-### 1. Create a New Book
-- **Endpoint:** `POST /books`
-- **Description:** Creates a new book in the database.
-- **Request Body:**
-    ```json
-    {
-      "title": "Go Programming",
-      "author": "John Doe"
-    }
-    ```
-- **Example cURL Command:**
-    ```bash
-    curl -X POST http://localhost:3000/books -H "Content-Type: application/json" -d '{"title": "Go Programming", "author": "John Doe"}'
-    ```
-- **Response:**
-    ```json
-    {
-      "id": 1,
-      "title": "Go Programming",
-      "author": "John Doe"
-    }
-    ```
+  เพื่อดึงข้อมูลหนังสือทั้งหมด สามารถใช้คำสั่ง `GET` ดังนี้:
 
-### 2. Get All Books
-- **Endpoint:** `GET /books`
-- **Description:** Fetches all books from the database.
-- **Example cURL Command:**
-    ```bash
-    curl http://localhost:3000/books
-    ```
-- **Response:**
+  ```bash
+  curl https://true-sadly-bass.ngrok-free.app/books
+   ```
+
+- **การตอบกลับ:**:
+  เมื่อคำขอสำเร็จ ระบบจะส่งข้อมูลหนังสือในรูปแบบ JSON ดังนี้:
     ```json
     [
       {
         "id": 1,
         "title": "Go Programming",
         "author": "John Doe"
+      },
+      {
+        "id": 2,
+        "title": "Advanced Go",
+        "author": "Jane Smith"
       }
     ]
-    ```
-
-### 3. Get a Single Book by ID
-- **Endpoint:** `GET /books/:id`
-- **Description:** Fetches a single book by its ID.
-- **Example cURL Command:**
-    ```bash
-    curl http://localhost:3000/books/1
-    ```
-- **Response:**
-    ```json
-    {
-      "id": 1,
-      "title": "Go Programming",
-      "author": "John Doe"
-    }
-    ```
-
-### 4. Update a Book by ID
-- **Endpoint:** `PUT /books/:id`
-- **Description:** Updates a book's details by its ID.
-- **Request Body:**
-    ```json
-    {
-      "title": "Go Programming Advanced",
-      "author": "John Doe"
-    }
-    ```
-- **Example cURL Command:**
-    ```bash
-    curl -X PUT http://localhost:3000/books/1 -H "Content-Type: application/json" -d '{"title": "Go Programming Advanced", "author": "John Doe"}'
-    ```
-- **Response:**
-    ```json
-    {
-      "id": 1,
-      "title": "Go Programming Advanced",
-      "author": "John Doe"
-    }
-    ```
-
-### 5. Delete a Book by ID
-- **Endpoint:** `DELETE /books/:id`
-- **Description:** Deletes a book by its ID.
-- **Example cURL Command:**
-    ```bash
-    curl -X DELETE http://localhost:3000/books/1
-    ```
-- **Response:**
-    ```json
-    {
-      "message": "Book deleted successfully"
-    }
-    ```
-
-## Database Setup
-
-If you're using SQLite, the database file will be created automatically when you run the API.
-
-### Option 1: Run with SQLite
-SQLite is used by default for this API. The database file will be created in the project directory (`books.db`).
-
-### Option 2: Run with MySQL
-If you prefer to use MySQL, change the database configuration in `main.go`:
-```go
-dsn := "user:password@tcp(localhost:3306)/yourdbname?charset=utf8mb4&parseTime=True&loc=Local"
+   ```
+- **ฟิลด์:**
+    - **id: รหัสประจำตัวที่ไม่ซ้ำของหนังสือ**
+    - **id: รหัสประจำตัวที่ไม่ซ้ำของหนังสือ**
+    - **author: ชื่อผู้เขียน**
 
 
+##### พารามิเตอร์ในการส่งคำขอ
+  - **Query Parameters: ไม่มี**
+  - **Path Parameters:**
+  - **{id}: รหัสของหนังสือที่ต้องการดึงข้อมูล (ใช้ใน endpoint GET /books/{id})**
 
-### สิ่งที่ประกอบใน `README.md` นี้:
-1. **การติดตั้งและใช้งาน:**
-   - ขั้นตอนในการติดตั้งโปรเจกต์
-   - วิธีการรัน API
-2. **API Endpoints:**
-   - ตัวอย่างของแต่ละ endpoint เช่น `POST /books`, `GET /books`, `PUT /books/:id`, `DELETE /books/:id`
-   - คำสั่ง `curl` สำหรับทดสอบ
-3. **การตั้งค่าฐานข้อมูล:**
-   - วิธีการตั้งค่าฐานข้อมูล (SQLite และ MySQL)
-4. **การทดสอบ API:**
-   - ตัวอย่างการทดสอบด้วย `curl` หรือ Postman
-5. **Docker Setup:**
-   - การใช้งาน Docker เพื่อรัน API และฐานข้อมูล
+##### การจัดการข้อผิดพลาด
+## การจัดการข้อผิดพลาด
+##### API จะส่งสถานะ HTTP เพื่อบ่งชี้ผลลัพธ์ของคำขอ:
+- **200 OK: คำขอสำเร็จ และระบบตอบกลับข้อมูลที่ร้องขอ**
+- **400 Bad Request: คำขอผิดพลาด มักจะเกิดจากการส่งข้อมูลที่ไม่ถูกต้องหรือขาดหาย**
+- **404 Not Found: ไม่พบข้อมูลที่ร้องขอ (เช่น หนังสือที่ระบุด้วย ID ไม่พบ)**
+- **500 Internal Server Error: เกิดข้อผิดพลาดที่เซิร์ฟเวอร์**
+###### ตัวอย่างการตอบกลับข้อผิดพลาด:
+  ```json
+      {
+        "error": "ไม่พบหนังสือ"
+      }
+  ```
 
-เมื่อคุณมีไฟล์ `README.md` ที่อธิบายการทำงานของ API นี้แล้ว ผู้ใช้คนอื่นๆ ที่เข้ามาในโปรเจกต์ของคุณจะสามารถเข้าใจและใช้งาน API ได้อย่างง่ายดายครับ!
+## ตัวอย่างคำขอ
+1. ดึงข้อมูลหนังสือทั้งหมด
+  ```bash
+    curl https://true-sadly-bass.ngrok-free.app/books
+  ```
+2. เพิ่มหนังสือใหม่:
 
+  ```bash
+    curl -X POST https://true-sadly-bass.ngrok-free.app/books \
+    -H "Content-Type: application/json" \
+    -d '{"title": "Go Web Development", "author": "John Doe"}'
+  ```
+3. ดึงข้อมูลหนังสือเฉพาะโดย ID:
+  ```bash
+    curl https://true-sadly-bass.ngrok-free.app/books/1
+  ```
+## การทดสอบ
+เพื่อทดสอบ API โดยใช้ URL สาธารณะที่สร้างจาก ngrok:
+1. ตรวจสอบให้แน่ใจว่า ngrok กำลังทำงานและส่งต่อพอร์ตที่แอปพลิเคชัน Go ของคุณถูกโฮสต์ (เช่น พอร์ต 3000)
+2. ใช้ URL ของ ngrok ในการส่งคำขอไปยัง endpoints
+# สรุป
+#### API นี้ให้คุณสามารถจัดการและดึงข้อมูลหนังสือจากระบบได้ คุณสามารถเพิ่มหนังสือใหม่, ดึงข้อมูลหนังสือทั้งหมด, หรือดึงข้อมูลหนังสือเฉพาะตาม ID สำหรับคำถามเพิ่มเติม กรุณาเยี่ยมชม หน้า issues ของ repository
+
+
+### อธิบายเนื้อหา
+
+1. **Base URL**:
+   - ระบุ URL ที่จะใช้สำหรับการเข้าถึง API ซึ่งจะได้จาก ngrok หรือ URL ของเซิร์ฟเวอร์ของคุณ
+
+2. **การยืนยันตัวตน**:
+   - ระบุว่า API นี้ไม่ต้องการการยืนยันตัวตน (หรือการเข้าสู่ระบบ)
+
+3. **Endpoints ที่สามารถใช้งานได้**:
+   - ระบุทุก endpoint ที่มีใน API เช่น `GET /books`, `POST /books`, และ `GET /books/{id}` พร้อมตัวอย่างคำสั่ง `curl` และคำอธิบายเกี่ยวกับฟิลด์ที่ได้รับจากการตอบกลับ
+
+4. **พารามิเตอร์ในการส่งคำขอ**:
+   - ระบุพารามิเตอร์ที่สามารถใช้ได้ในคำขอ เช่น `{id}` สำหรับดึงข้อมูลหนังสือเฉพาะจาก ID
+
+5. **การจัดการข้อผิดพลาด**:
+   - อธิบายวิธีการจัดการข้อผิดพลาดที่อาจเกิดขึ้นจากการเรียก API เช่น `400 Bad Request` หรือ `500 Internal Server Error`
+
+6. **ตัวอย่างคำขอ**:
+   - ให้ตัวอย่างการใช้คำสั่ง `curl` เพื่อทดสอบ API
+
+7. **การทดสอบ**:
+   - ให้คำแนะนำในการทดสอบ API โดยใช้ ngrok
+
+การจัดทำ `README.md` ในลักษณะนี้จะช่วยให้ผู้ใช้สามารถเข้าใจวิธีการใช้งาน API ได้อย่างรวดเร็วและชัดเจน

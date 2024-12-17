@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate API Key</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .api-key {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e7f7e7;
+            border: 1px solid #d3e4d3;
+            word-wrap: break-word;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Generate API Key</h1>
+    <p>Click the button below to generate your API key.</p>
+    <button id="generate-btn">Generate API Key</button>
+
+    <div class="api-key" id="api-key-container" style="display: none;">
+        <strong>Your API Key:</strong>
+        <pre id="api-key"></pre>
+    </div>
+</div>
+
+<script>
+    document.getElementById('generate-btn').addEventListener('click', async () => {
+        try {
+            const response = await fetch('http://localhost:3000/generate-api-key', {
+                method: 'GET',
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const apiKey = data.api_key;
+
+                // Show the API key on the page
+                document.getElementById('api-key').textContent = apiKey;
+                document.getElementById('api-key-container').style.display = 'block';
+            } else {
+                alert('Failed to generate API key');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while generating the API key');
+        }
+    });
+</script>
+
+</body>
+</html>

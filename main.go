@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gin-contrib/cors" // เพิ่มการนำเข้า CORS middleware
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -20,7 +21,6 @@ type Book struct {
 
 func initDB() {
 	var err error
-	// ใช้ GORM กับไดรเวอร์ SQLite ที่เหมาะสม
 	db, err = gorm.Open(sqlite.Open("data/books.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
@@ -54,7 +54,11 @@ func getBooks(c *gin.Context) {
 
 func main() {
 	initDB()
+
 	r := gin.Default()
+
+	// เพิ่ม CORS middleware
+	r.Use(cors.Default()) // ใช้ CORS ปกติ เพื่ออนุญาตให้ทุกโดเมนเข้าถึงได้
 
 	r.POST("/books", createBook)
 	r.GET("/books", getBooks)

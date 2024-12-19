@@ -1,1 +1,10 @@
 ngrok http --domain=true-sadly-bass.ngrok-free.app 3000
+curl -X POST http://localhost:3000/books -H "Content-Type: application/json" -d '{"title": "Go Programming", "author": "John Doe"}'
+
+$headers = @{
+    "Content-Type" = "application/json"
+}
+
+$body = '{"title": "Go Programming", "author": "John Doe"}'
+
+Invoke-RestMethod -Uri http://localhost:3000/books -Method Post -Headers $headers -Body $bod

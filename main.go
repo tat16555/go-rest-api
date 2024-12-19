@@ -59,6 +59,18 @@ func main() {
 
 	// เพิ่ม CORS middleware
 	r.Use(cors.Default()) // ใช้ CORS ปกติ เพื่ออนุญาตให้ทุกโดเมนเข้าถึงได้
+	// r.Use(cors.New(cors.Config{
+	// 	AllowOrigins:     []string{"https://true-sadly-bass.ngrok-free.app"}, // ใส่ URL ที่ใช้จริง
+	// 	AllowMethods:     []string{"GET", "POST", "OPTIONS"},
+	// 	AllowHeaders:     []string{"Content-Type", "Authorization"},
+	// 	AllowCredentials: true,
+	// }))
+
+	// r.Use(cors.New(cors.Config{
+	// 	AllowOrigins: []string{"*"},
+	// 	AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+	// 	AllowHeaders: []string{"Origin", "Content-Type", "Authorization"},
+	// }))
 
 	r.POST("/books", createBook)
 	r.GET("/books", getBooks)

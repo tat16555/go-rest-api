@@ -56,20 +56,24 @@
     </form>
 
     <script>
-        const apiUrl = 'https://true-sadly-bass.ngrok-free.app/books'; // ใช้ URL ที่ได้รับจาก Ngrok
+        const apiUrl = 'https://true-sadly-bass.ngrok-free.app/books';
 
         // Function to fetch and display books in a table
         async function fetchBooks() {
-            const response = await fetch(apiUrl);
-            const books = await response.json();
-            const booksTableBody = document.getElementById('books-table').getElementsByTagName('tbody')[0];
-            booksTableBody.innerHTML = ''; // Clear current table content
-            books.forEach(book => {
-                const row = booksTableBody.insertRow();
-                row.insertCell(0).textContent = book.id;
-                row.insertCell(1).textContent = book.title;
-                row.insertCell(2).textContent = book.author;
-            });
+            try {
+                const response = await fetch(apiUrl);
+                const books = await response.json();
+                const booksTableBody = document.getElementById('books-table').getElementsByTagName('tbody')[0];
+                booksTableBody.innerHTML = ''; // Clear current table content
+                books.forEach(book => {
+                    const row = booksTableBody.insertRow();
+                    row.insertCell(0).textContent = book.id;
+                    row.insertCell(1).textContent = book.title;
+                    row.insertCell(2).textContent = book.author;
+                });
+            } catch (error) {
+                console.error('Error fetching books:', error);
+            }
         }
 
         // Create a new book
@@ -79,16 +83,20 @@
             const author = document.getElementById('author').value;
             const newBook = { title, author };
 
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(newBook)
-            });
-            const createdBook = await response.json();
-            alert(`Created new book: ${createdBook.title}`);
-            fetchBooks(); // Refresh the books list
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newBook)
+                });
+                const createdBook = await response.json();
+                alert(`Created new book: ${createdBook.title}`);
+                fetchBooks(); // Refresh the books list
+            } catch (error) {
+                console.error('Error creating book:', error);
+            }
         });
 
         // Initial fetch of books
